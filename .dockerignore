@@ -1,0 +1,9 @@
+.gitignore
+__pycache__
+*.py[cod]
+*.pyo
+save/
+docs/
+catboost_info/
+.vscode/
+.DS_Store

@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.vscode/
+save/
+.DS_Store
+catboost_info/
