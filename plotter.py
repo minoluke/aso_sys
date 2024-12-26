@@ -27,6 +27,10 @@ min_window = 30              # 最小のウィンドウサイズ
 delta_window = 15             # ウィンドウサイズの増分
 grid_number = 11
 
+min_window = 1              # 最小のウィンドウサイズ
+delta_window = 1             # ウィンドウサイズの増分
+grid_number = 5
+
 
 '''       
  'gas': f'{basepath}/gas/60.0_30.0/{n}_consensus.csv',
@@ -41,14 +45,14 @@ overlap = 0.85
 look_backward = 165
 look_forward = 165
 cv=1
-od='all'
+od='tremor10min'
 
 data_streams = data_streams_dict.get(od)
 
 
 plotmodel = PlotModel(ti=start_period, tf=end_period, look_backward=look_backward, overlap=overlap, look_forward=look_forward, data_streams=data_streams, od=od, cv=cv)
 
-plotmodel.plot_AUC_colormap(min_window, delta_window, grid_number, observation_data_name='aggregated all')
+plotmodel.plot_AUC_colormap(min_window, delta_window, grid_number, observation_data_name='tremor 10 min')
 #plotmodel.plot_learning_curve(max_models=100, metrics='AUC',observation_data_name='tilt')
 '''
 for key, value in data_name_dict.items():

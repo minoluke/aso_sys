@@ -91,75 +91,66 @@ class PlotModel(FeatureExtractionModel):
         data = pd.read_csv(file_path)
         time_axis = pd.to_datetime(data['time'])
 
-        # feature_data を NumPy 配列に変換
+    
         feature_data = np.array(data[feature_name])
 
-        # ビンの境界を設定（対数スケールの場合はlogspaceを使用）
         bin_edges = np.logspace(np.log10(x_min), np.log10(x_max), 30) if log_scale else np.linspace(x_min, x_max, 30)
 
-        # 全期間のヒストグラムと噴火前のプロットを同じグラフに描画
-        fig, ax = plt.subplots(figsize=(18, 6))  # 横長に調整
+        fig, ax = plt.subplots(figsize=(18, 6))  
 
-        # 全体区間の特徴量データをヒストグラムに描画
         n, bins, patches = ax.hist(feature_data, bins=bin_edges, alpha=0.5, label='All Period')
         vertical_offset = max(n) * 0.9
         ax.set_xlim(x_min, x_max)
         ax.set_xlabel(xlabel, fontsize=25)
 
-        # y軸の最大値を取得し、相対サイズの基準を作る
         ymax = ax.get_ylim()[1]
 
-        # 噴火前の特徴量データをまとめるリスト
+
         pre_eruption_all_features = []
 
         for eruption_date in eruptive_periods:
             months = months
             pre_eruption_start = eruption_date - pd.DateOffset(months=months)
 
-            # 噴火前nヶ月間のデータを取得
+
             pre_eruption_mask = (time_axis >= pre_eruption_start) & (time_axis <= eruption_date)
             pre_eruption_features = np.array(feature_data)[pre_eruption_mask]
             pre_eruption_times = time_axis[pre_eruption_mask]
 
-            # プロットする頻度を下げる
             indices_to_plot = np.linspace(0, len(pre_eruption_features) - 1, min(5, len(pre_eruption_features)), dtype=int)
             pre_eruption_features = pre_eruption_features[indices_to_plot]
             pre_eruption_times = pre_eruption_times.iloc[indices_to_plot]
 
-            # 噴火に近づくにつれてばつ印を大きくするためのサイズリストを作成
             days_until_eruption = (eruption_date - pre_eruption_times).dt.days
-            sizes = ymax * 0.9 - 0.02 * ymax * days_until_eruption / months  # 噴火に近づくにつれてサイズが大きくなる
+            sizes = ymax * 0.9 - 0.02 * ymax * days_until_eruption / months  
 
-            # 噴火前1ヶ月の特徴量データの位置を太いばつ印でプロット
             ax.scatter(pre_eruption_features, [vertical_offset] * len(pre_eruption_features),
                     label=f'{months} month before {eruption_date.strftime("%Y-%m-%d")}',
                     marker='x', s=sizes, linewidths=5)
 
-            # 噴火前の全特徴量データをまとめる
+            
             pre_eruption_all_features.extend(pre_eruption_features)
 
-            # オフセットを微調整しながら次の噴火を描画
             vertical_offset -= ymax * 0.19
 
-        # U検定を実行してp-valueを計算
+
         stat, p_value = mannwhitneyu(feature_data, pre_eruption_all_features, alternative='two-sided')
 
-        # p-valueをグラフの左の真ん中に固定して表示
         ax.text(0.05, 0.3, f'p = {p_value:.1e}', fontsize=24, color='black', style='italic', transform=ax.transAxes)
 
-        ax.set_yticks([])  # y軸の目盛りを非表示に
+        ax.set_yticks([]) 
         ax.tick_params(axis='x', labelsize=14)
 
-        # 横軸を対数表示するかどうか
-        if log_scale:
-            ax.set_xscale('log')  # 横軸をログスケールに変更
 
-        # 枠線を非表示にする
+        if log_scale:
+            ax.set_xscale('log')  
+
+  
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_visible(False)
 
-        # 凡例を左上に固定して表示
+ 
         ax.legend(loc='upper left', fontsize=14, frameon=False, bbox_to_anchor=(0.02, 0.98), borderaxespad=0)
 
         plot_dir = self.feature_histogram_dir
@@ -185,12 +176,12 @@ class PlotModel(FeatureExtractionModel):
         df['time'] = pd.to_datetime(df['time'])
         if smoothed:
             df = self._smooth_data(df, 1)
-            #smoothed列をconsensus列に置き換え
+
             df['consensus'] = df['smoothed']
             df['eruption_within_days'] = df['time'].apply(lambda x: self._eruption_within_days(x, eruptive_periods, smoothed_window_size))
         else:
             #df = self._smooth_data(df, 1)
-            #smoothed列をconsensus列に置き換え
+
             #df['consensus'] = df['smoothed']
             df['eruption_within_days'] = df['time'].apply(lambda x: self._eruption_within_days(x, eruptive_periods, lookforward_days))
 
@@ -251,21 +242,18 @@ class PlotModel(FeatureExtractionModel):
         plt.plot(model_range, metric_test_scores, label=f'Test Data {metrics}', marker='o')
         plt.plot(model_range, metric_train_scores, label=f'Train Data {metrics}', marker='x')
 
-        # 軸ラベルのフォントサイズを大きく
+
         plt.xlabel('Number of Models', fontsize=18)
         plt.ylabel(metrics, fontsize=18)
 
-        # タイトルのフォントサイズを大きく
+  
         plt.title(f'AUC trends for {observation_data}', fontsize=20)
 
-        # 目盛りのフォントサイズを大きく
-        plt.tick_params(axis='x', labelsize=14)  # x軸
-        plt.tick_params(axis='y', labelsize=14)  # y軸
+        plt.tick_params(axis='x', labelsize=14)  
+        plt.tick_params(axis='y', labelsize=14)  
 
-        # 凡例のフォントサイズを大きく
         plt.legend(fontsize=14)
 
-        # グリッドを設定
         plt.grid()
 
         plot_dir = self.learning_curve_dir
@@ -279,7 +267,7 @@ class PlotModel(FeatureExtractionModel):
         end_test = eruptive_periods[exclusion_index]
         test_df, train_df = self._preprocess_data(file_path, eruptive_periods, lookforward_days, start_test, end_test, exclusion_index, smoothed)
 
-        # 真のラベルと予測スコア
+
         y_true = test_df['eruption_within_days'].astype(int)
         y_scores = test_df['consensus']
         if len(np.unique(y_true)) < 2:
@@ -294,7 +282,7 @@ class PlotModel(FeatureExtractionModel):
         observation_data = self.od
 
             
-        # look_backward と look_forward のグリッドポイントを生成
+     
         look_backward_values = [min_window + delta_window * i for i in range(grid_number)]
         look_forward_values = [min_window + delta_window * i for i in range(grid_number)]
         
@@ -302,7 +290,7 @@ class PlotModel(FeatureExtractionModel):
             look_backward_values = [0.5, 1, 2, 3, 4]
             look_forward_values = [0.5, 1, 2, 3, 4]
          
-        # 各グリッドポイントでAUCを計算
+        
         full_auc_matrix = np.zeros((grid_number, grid_number))
         exclude_auc_matrix = np.zeros((grid_number, grid_number,eruption_number))
         for i, lb_val in enumerate(look_backward_values):
@@ -324,7 +312,7 @@ class PlotModel(FeatureExtractionModel):
                 exclude_auc_matrix[i, j,:] = np.array(exclude_auc_values) / (eruption_number - 1)
 
 
-        # AUCのマップをcsvファイルとして保存
+      
         if smoothed == False:
             auc_data_dir = r'{:s}/{:s}'.format(self.auc_data_dir, observation_data)
         else:
@@ -340,12 +328,12 @@ class PlotModel(FeatureExtractionModel):
             observation_data = observation_data_name
 
         plt.rcParams.update({
-            'font.size': 18,         # 全体のフォントサイズ
-            'axes.titlesize': 22,    # タイトルのフォントサイズ
-            'axes.labelsize': 20,    # 軸ラベルのフォントサイズ
-            'xtick.labelsize': 17,   # x軸目盛りのフォントサイズ
-            'ytick.labelsize': 17,   # y軸目盛りのフォントサイズ
-            'legend.fontsize': 16    # 凡例のフォントサイズ
+            'font.size': 18,         
+            'axes.titlesize': 22,   
+            'axes.labelsize': 20,    
+            'xtick.labelsize': 17,  
+            'ytick.labelsize': 17,   
+            'legend.fontsize': 16   
         })
         
         plt.figure(figsize=(10, 8))
@@ -396,7 +384,7 @@ class PlotModel(FeatureExtractionModel):
 
         times = model_data[next(iter(model_data))]['time']
 
-        # アラーム期間を特定
+   
         for t in times:
             count_above_threshold = 0
             for model in model_data.values():
@@ -414,18 +402,18 @@ class PlotModel(FeatureExtractionModel):
                 else:
                     alarm_end_time = max(alarm_end_time, t + pd.Timedelta(days=duration))
 
-            # 警報終了の確認
+            
             if is_alarm and t > alarm_end_time:
-                # 警報終了後の期間について噴火の確認
+                
                 eruption_in_alarm = any(last_alert_time <= ed <= alarm_end_time for ed in eruption_dates)
                 if eruption_in_alarm:
-                    tp += 1  # 警報期間中に噴火があった場合
+                    tp += 1 
                 else:
-                    fp += 1  # 警報期間中に噴火がなかった場合
+                    fp += 1  
                 alarm_periods.append((last_alert_time, alarm_end_time))
                 is_alarm = False
 
-        # 最後の警報期間も確認
+        
         if is_alarm:
             eruption_in_alarm = any(last_alert_time <= ed <= alarm_end_time for ed in eruption_dates)
             if eruption_in_alarm:
@@ -434,18 +422,18 @@ class PlotModel(FeatureExtractionModel):
                 fp += 1
             alarm_periods.append((last_alert_time, alarm_end_time))
 
-        # 非警報期間の噴火確認
+        
         last_end = start_time
         for start, end in alarm_periods:
-            # 警報期間が始まるまでの非警報期間を確認
+           
             eruption_in_non_alarm = any(last_end <= ed <= start for ed in eruption_dates)
             if eruption_in_non_alarm:
-                fn += 1  # 非警報期間中に噴火があった場合
+                fn += 1  
             else:
-                tn += 1  # 非警報期間中に噴火がなかった場合
+                tn += 1  
             last_end = end
 
-        # 最後の警報終了後の期間も確認
+        
         if last_end < end_time:
             eruption_in_non_alarm = any(last_end <= ed <= end_time for ed in eruption_dates)
             if eruption_in_non_alarm:
@@ -456,15 +444,15 @@ class PlotModel(FeatureExtractionModel):
         return alarm_periods, tp, fp, tn, fn
         
     def _smooth_data(self, df, window_size, DayData=True):
-        # 平滑化処理
+        
         df['smoothed'] = df['consensus'].rolling(window=window_size, min_periods=1).mean()
 
-        # 日付ごとに再サンプリングし、欠損値を補間
+      
         if DayData:
-            df = df.set_index('time').resample('D').asfreq()  # 'time'列をインデックスにして日単位で再サンプリング
-        df['smoothed'] = df['smoothed'].interpolate(method='linear')  # 欠損値を線形補間
+            df = df.set_index('time').resample('D').asfreq()  
+        df['smoothed'] = df['smoothed'].interpolate(method='linear')
         
-        # インデックスをリセットして元の形式に戻す
+        
         df = df.reset_index()
 
         return df
@@ -475,13 +463,13 @@ class PlotModel(FeatureExtractionModel):
         return df
 
     def _calculate_metrics(self, tp, fp, tn, fn):
-        # Precisionの計算 (分母が0の場合は0にする)
+        
         precision = tp / (tp + fp) if (tp + fp) > 0 else 0
 
-        # Recallの計算 (分母が0の場合は0にする)
+        
         recall = tp / (tp + fn) if (tp + fn) > 0 else 0
 
-        # MCCの計算 (分母が0の場合は0にする)
+
         numerator = (tp * tn) - (fp * fn)
         denominator = np.sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
 
@@ -503,12 +491,11 @@ class PlotModel(FeatureExtractionModel):
         model_data = {}
         eruptive_periods = self._load_eruptive_periods()
 
-        # 各モデルのデータを読み込み
+       
         for (name, path), window_size in zip(model_paths.items(), smooth_window_sizes):
             df = pd.read_csv(path)
             df['time'] = pd.to_datetime(df['time'])
 
-            # 平滑化処理
             if name == 'tremor10min':
                 df = self._smooth_data(df, window_size, DayData=False)
             else:           
@@ -516,52 +503,42 @@ class PlotModel(FeatureExtractionModel):
 
             df =  self._filter_post_eruption(df, eruptive_periods, cv)
 
-            # データの標準化（MinMaxScalerでスケーリング）
+          
             df = self._scale_data(df)
 
             model_data[name] = df
 
-        # プロットする期間をデータの期間に合わせる
         start_time = max([data['time'].min() for data in model_data.values()])
         end_time = min([data['time'].max() for data in model_data.values()]) + pd.Timedelta(days=60)
 
-        # 警報期間の取得
         alarm_periods, tp, fp, tn, fn = self._get_alarm_periods(model_data, eruptive_periods, start_time, end_time, threshold=threshold, m_threshold=m_threshold)
 
         mcc, precision, recall = self._calculate_metrics(tp, fp, tn, fn)
-        # プロットの比率を5:1に設定
         plt.figure(figsize=(15, 3))
         
-        # 各モデルのプロット
         lines = []
         for name, df in model_data.items():
             label_name = name.replace('gas', 'volcanic gas').replace('magnetic', 'magnetic force').replace('kakou', 'crater wall').replace('yudamari', 'hot spring').replace('tremor', 'tremor 1 day').replace('short', 'tremor 10 min')
             line, = plt.plot(df['time'], df['smoothed'], label=f'{label_name} model')
             lines.append(line)
 
-        # 警報期間を薄い赤で塗りつぶす
         for alarm_start, alarm_end in alarm_periods:
             plt.axvspan(alarm_start, alarm_end, color='lightcoral', alpha=0.3)
 
-        # 噴火の日付部分に赤い縦の点線を追加
         for eruption in eruptive_periods:
             eruption_date = pd.to_datetime(eruption)
             if start_time <= eruption_date <= end_time:
                 plt.axvline(x=eruption_date, color='red', linestyle='--')
 
-        # プロットの範囲をデータの期間に合わせる
         plt.xlim(start_time, end_time)
 
-        # グラフのラベルとタイトル
         plt.xlabel('Time', fontsize=14)
         plt.ylabel('Prediction Index', fontsize=14)
         plt.title('Prediction Index Time Series with Alarm Periods', fontsize=16)
 
-        # 凡例を追加
         red_patch = plt.Line2D([0], [0], color='lightcoral', lw=4, label='alarm period')
         plt.legend(handles=[red_patch] + lines, loc='upper right', fontsize=12)
 
-        # グリッド表示
         plt.grid(True)
         plt.xticks(fontsize=12)
         plt.yticks(fontsize=12)
@@ -591,26 +568,20 @@ class PlotModel(FeatureExtractionModel):
 
             tp, fp, tn, fn, mcc, precision, recall = self._plot_time_series_with_alarm(model_paths, smooth_window_sizes, cv, threshold=threshold, m_threshold=m_threshold)
 
-            # 累積計算
             total_tp += tp
             total_fp += fp
             total_tn += tn
             total_fn += fn
 
-        # 全体の結果を計算
         total_tn = total_tn - total_tp
         total_mcc, total_precision, total_recall = self._calculate_metrics(total_tp, total_fp, total_tn, total_fn)
 
-        # 全体の結果を表示
         print(f"Total TP: {total_tp}, Total FP: {total_fp}, Total TN: {total_tn}, Total FN: {total_fn}")
         print(f"Total MCC: {total_mcc}, Total Precision: {total_precision}, Total Recall: {total_recall}")
 
     def _calculate_pearson_correlation(self, df1, df2, cv, eruption_definition_date=10):
-        # 2つのデータフレームの時系列データを結合
         merged = pd.merge(df1, df2, on='time', suffixes=('_1', '_2'))
 
-        #正例と負例のヒストグラムを計算(正例とは、噴火のn日前までのconsensusのヒストグラム)
-        # consensusの値によって0.01刻みでヒストグラムを作成
         eruption_periods = self._load_eruptive_periods()
         eruption_date = pd.to_datetime(eruption_periods[cv])
         start_date = eruption_date - pd.DateOffset(days=eruption_definition_date)
@@ -621,11 +592,9 @@ class PlotModel(FeatureExtractionModel):
         neg_1_hist, _ = np.histogram(neg['consensus_1'], bins=np.arange(0, 1.01, 0.01))
         neg_2_hist, _ = np.histogram(neg['consensus_2'], bins=np.arange(0, 1.01, 0.01))
         
-        #差分のヒストグラムを計算
         D_1 = pos_1_hist / len(pos) - neg_1_hist / len(neg)
         D_2 = pos_2_hist / len(pos) - neg_2_hist / len(neg)
 
-        # 2つのヒストグラムの相関係数を計算
         correlation = np.corrcoef(D_1, D_2)[0, 1]
 
         return correlation
@@ -638,7 +607,6 @@ class PlotModel(FeatureExtractionModel):
         return consensus_paths
     
     def plot_pearson_correlation_matrix(self, window_params):
-        # データの読み込み
         average_correlation_matrix = np.zeros((len(window_params), len(window_params)))
         for cv in range(self.eruption_number-1):
             consensus_paths = self._find_consensus_paths(window_params, cv)
@@ -648,19 +616,16 @@ class PlotModel(FeatureExtractionModel):
                 df['time'] = pd.to_datetime(df['time'])
                 df_dict[name] = df
 
-            # データフレームを１日ごとに再サンプリング
             for name, df in df_dict.items():
                 df = df.set_index('time').resample('D').asfreq()
                 df = df.interpolate(method='linear')
                 df = df.reset_index()
                 df_dict[name] = df
 
-            # 噴火前の六ヶ月間でデータをフィルタリング
             for name, df in df_dict.items():
                 df_dict[name] = self._filter_post_eruption(df, self._load_eruptive_periods(), cv)
             
 
-            # データフレームの相関係数を計算
             correlation_matrix = np.zeros((len(df_dict), len(df_dict)))
             for i, (name1, df1) in enumerate(df_dict.items()):
                 for j, (name2, df2) in enumerate(df_dict.items()):
@@ -673,20 +638,18 @@ class PlotModel(FeatureExtractionModel):
             plt.imshow(abs_correlation_matrix, cmap='viridis', interpolation='none', aspect='auto', vmin=0, vmax=1)
             plt.colorbar(label='Pearson Correlation Coefficient')
 
-            # x軸とy軸のラベル
             plt.xticks(ticks=np.arange(len(df_dict)), labels=df_dict.keys())
             plt.yticks(ticks=np.arange(len(df_dict)), labels=df_dict.keys())
             plt.xlabel('Observation Data')
             plt.ylabel('Observation Data')
             plt.title(f'Pearson Correlation Coefficient Matrix {cv} of eruption number')
 
-            # 数値を各セルに表示
             for i in range(correlation_matrix.shape[0]):
                 for j in range(correlation_matrix.shape[1]):
                     plt.text(j, i, f"{abs_correlation_matrix[i, j]:.2f}",
                             ha='center', va='center', color='white' if abs(correlation_matrix[i, j]) > 0.5 else 'black')
 
-            # グラフの設定
+
             plt.gca().invert_yaxis()
             plt.xticks(rotation=45)
             plt.tight_layout()
@@ -723,8 +686,6 @@ class PlotModel(FeatureExtractionModel):
     def plot_optimized_time_scale(self, observation_names, min_window, delta_window, grid_number, smoothing_sigma=1, persentile=85):
         look_backward_values = [min_window + delta_window * i for i in range(grid_number)]
         look_forward_values = [min_window + delta_window * i for i in range(grid_number)]
-        # キーがcv、次のキーが観測データ名、バリュー値が最適な時間スケールの座標を格納する辞書
-        # optimized_time_scalesを、cvをキー、観測データ名をサブキーとして初期化
         optimized_time_scales = {
             cv: {observation_name: {} for observation_name in observation_names} 
             for cv in range(self.eruption_number)
@@ -732,14 +693,10 @@ class PlotModel(FeatureExtractionModel):
 
         for observation_name in observation_names:
             for cv in range(self.eruption_number):
-                # AUCデータの読み込み
                 auc_data_dir = r'{:s}/{:s}'.format(self.auc_data_dir, observation_name)
                 exclude_auc_matrix = np.loadtxt(f'{auc_data_dir}/exclude_auc_matrix_{cv}.csv', delimiter=',')
-                # look_backward_values、look_forward_valuesに対応するauc_dataを取得
                 exclude_auc_matrix = exclude_auc_matrix[:grid_number, :grid_number]
-                # 最適な時間範囲を見つける
                 optimal_range_coords, max_auc_coords = self._find_optimal_range(exclude_auc_matrix, smoothing_sigma=smoothing_sigma, percentile=persentile)
-                # プロットの作成
                 plt.figure(figsize=(10, 8))
                 plt.imshow(exclude_auc_matrix, cmap='viridis', interpolation='none', aspect='auto', vmin=0.5, vmax=1.0)
                 plt.colorbar(label='Mean AUC')
@@ -749,18 +706,14 @@ class PlotModel(FeatureExtractionModel):
                 plt.ylabel('Look Backward Length (days)')
                 plt.title(f'Optimal range for {observation_name} (Cross-validation: {cv})')
                 plt.gca().invert_yaxis()
-                # 最適な範囲のプロット
-                if optimal_range_coords.size > 0:  # 最適範囲が存在する場合のみ描画
-                    optimal_rows, optimal_cols = zip(*optimal_range_coords)  # 座標を行と列に分解
+                if optimal_range_coords.size > 0: 
+                    optimal_rows, optimal_cols = zip(*optimal_range_coords) 
                     plt.scatter(optimal_cols, optimal_rows, color='red', s=100, label='Optimal Range')
                     plt.scatter(max_auc_coords[1], max_auc_coords[0], color='blue', s=150, marker='x', label='optimal point')
 
-                # 凡例を追加
                 plt.legend()
                 #plt.show()
-                # 時間スケールの最適化結果を格納
                 optimized_time_scales[cv][observation_name] = [look_backward_values[max_auc_coords[0]], look_forward_values[max_auc_coords[1]]]
-                # プロットの保存
                 plot_dir = self.optimized_time_scale_figure_dir
                 if not os.path.exists(plot_dir):
                     os.makedirs(plot_dir)
@@ -768,7 +721,6 @@ class PlotModel(FeatureExtractionModel):
                 plt.close()
 
         print(optimized_time_scales)
-        # 最適な時間スケールをjsonで保存
         optimized_time_scale_dir = self.optimized_time_scale_data_dir
         if not os.path.exists(optimized_time_scale_dir):
             os.makedirs(optimized_time_scale_dir)
@@ -802,8 +754,8 @@ class PlotModel(FeatureExtractionModel):
 
         # 4. 最大の閉じた領域を抽出
         regions = regionprops(labeled_array)
-        largest_region = max(regions, key=lambda r: r.area)  # 最大の範囲を持つ領域を選択
-        optimal_range_coords = largest_region.coords  # 最適範囲の座標を取得
+        largest_region = max(regions, key=lambda r: r.area) 
+        optimal_range_coords = largest_region.coords 
 
         max_auc_value = smoothed_data[largest_region.coords[:, 0], largest_region.coords[:, 1]].max()
         max_auc_coords = largest_region.coords[np.argmax(auc_data[largest_region.coords[:, 0], largest_region.coords[:, 1]])]
