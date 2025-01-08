@@ -7,7 +7,7 @@ Follow these steps to build and run the Docker container for the project.
 First, clone the repository:
 
 ```bash
-git clone --branch gpu https://github.com/minoluke/aso_sys
+git clone https://github.com/minoluke/aso_sys
 ```
 
 ## 2. Navigate to the Project Directory
