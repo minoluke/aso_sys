@@ -558,7 +558,6 @@ class PlotModel(FeatureExtractionModel):
         time_scale_dic = json.load(open(f'{time_scale_data_dir}/optimized_time_scales.json', 'r'))
 
         total_tp, total_fp, total_tn, total_fn = 0, 0, 0, 0
-        # 各 n でループ
         for cv in range(self.eruption_number):
             model_paths = {
                 obs: f'{basepath}/{obs}/{scale[0]}.0_{scale[1]}.0/{cv}_consensus.csv'
@@ -728,31 +727,15 @@ class PlotModel(FeatureExtractionModel):
             json.dump(optimized_time_scales, f, indent=4)
                 
     def _find_optimal_range(self, auc_data, smoothing_sigma=1, percentile=85):
-        """
-        与えられたCSVデータに対して、スムージング、上位領域の抽出、最大の閉じた領域を特定します。
-
-        Parameters:
-            csv_data (str): CSV形式の文字列データ
-            smoothing_sigma (float): スムージングの強さを示すσ値 (デフォルトは1)
-            percentile (float): 上位領域を抽出するためのパーセンタイル値 (デフォルトは90)
-
-        Returns:
-            np.ndarray: 最適範囲の座標リスト
-        """
-
-        # 1. スムージング
         padding = 3
         padded_auc_data = np.pad(auc_data, pad_width=padding, mode='constant', constant_values=0)
         smoothed_data = gaussian_filter(padded_auc_data, sigma=smoothing_sigma)[padding:-padding, padding:-padding]  # パディングを除去
 
-        # 2. 上位の領域を抽出（パーセンタイルを利用）
         threshold = np.percentile(smoothed_data, percentile)
         binary_map = smoothed_data > threshold
 
-        # 3. 閉じた領域を検出
         labeled_array, num_features = label(binary_map)
 
-        # 4. 最大の閉じた領域を抽出
         regions = regionprops(labeled_array)
         largest_region = max(regions, key=lambda r: r.area) 
         optimal_range_coords = largest_region.coords 

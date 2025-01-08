@@ -1,14 +1,14 @@
-# ベースイメージを指定
+# specify base image
 FROM continuumio/miniconda3
 
-# 作業ディレクトリを設定
+# set working directory
 WORKDIR /workspace
 
-# conda-forgeチャンネルの使用を設定
+# set conda-forge
 RUN conda config --add channels conda-forge && \
     conda config --set channel_priority strict
 
-# Pythonバージョンと依存パッケージをインストール
+#  install required packages
 RUN conda install -y python=3.12 \
     tsfresh=0.20.3 \
     imbalanced-learn=0.12.4 \
@@ -24,7 +24,7 @@ RUN conda install -y python=3.12 \
     catboost \
     && conda clean -afy
 
-    # modules と data フォルダを Docker コンテナにコピー
+# copy the content of the local src directory to the working directory
 COPY modules /workspace/modules
 COPY data /workspace/data
 COPY main.py /workspace/main.py

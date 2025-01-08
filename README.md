@@ -7,7 +7,7 @@ Follow these steps to clone the repository and set up the required environment.
 First, clone the repository:
 
 ```bash
-git clone --branch gpu https://github.com/minoluke/aso
+git clone --branch gpu https://github.com/minoluke/aso_sys
 ```
 
 ## 2. Create the Conda Environment
@@ -15,7 +15,7 @@ git clone --branch gpu https://github.com/minoluke/aso
 Navigate to the cloned directory and create the Conda environment using the environment.yml file:
 
 ```bash
-cd aso
+cd aso_sys
 conda env create -f environment.yml
 ```
 

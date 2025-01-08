@@ -258,7 +258,6 @@ class TrainModel(FeatureExtractionModel):
         
         new_all_fts_path = os.path.join(wl_lfl_folder, f"{cv}_all.fts")
         
-        # ファイルを新しいディレクトリにコピー
         if os.path.exists(all_fts_path):
             shutil.copy(all_fts_path, new_all_fts_path)
  

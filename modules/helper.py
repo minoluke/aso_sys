@@ -11,11 +11,6 @@ import re
 import pandas as pd
 
 def sanitize_feature_names(feature_names):
-    """
-    特徴名または特徴名リストをクレンジングする関数。
-    入力が単一の文字列の場合はそのままクレンジングし、
-    リストまたは pd.Index の場合は各要素にクレンジングを適用。
-    """
     def sanitize(name):
         name = name.replace(' ', '')
         return re.sub(r'[^a-zA-Z0-9_]', '_', name)

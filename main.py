@@ -66,22 +66,21 @@ def one_train_test(od,lb,lf,cv):
 
 def overlap_train_test(od, min_window, delta_window, grid_number):
     """
-    one_train_test をグリッド探索する関数。
-    
-    パラメータ:
-    - od: 観測データパラメータ
-    - min_window: 最小のウィンドウサイズ
-    - delta_window: ウィンドウサイズの増分
-    - grid_number: グリッドの分割数
+    Function to perform grid search on one_train_test.
+
+    Parameters:
+    - od: Observation data parameter
+    - min_window: Minimum window size
+    - delta_window: Increment of window size
+    - grid_number: Number of grid divisions
     """
-    # look_backward と look_forward のグリッドポイントを生成
+
+    # generate frid 
     look_backward_values = [min_window + delta_window * i for i in range(grid_number)]
     look_forward_values = [min_window + delta_window * i for i in range(grid_number)]
     
-    # cv の範囲を設定（0から4まで）
     cv_values = range(observation_m.eruption_number)
     
-    # 全ての組み合わせを生成
     for lb_val, lf_val, cv_val in itertools.product(look_backward_values, look_forward_values, cv_values):
         print(f"Running train_test with look_backward={lb_val}, look_forward={lf_val}, cv={cv_val}")
         one_train_test(od, str(lb_val), str(lf_val), str(cv_val))
@@ -99,13 +98,12 @@ if __name__ == "__main__":
     
     one_train_test(args.od,args.lb, args.lf,args.cv)
     """
-    # グリッド探索パラメータの設定
-    observation_data = 'yudamari'  # 使用する観測データ
-    min_window = 30              # 最小のウィンドウサイズ
-    delta_window = 15             # ウィンドウサイズの増分
-    grid_number = 11              # グリッドの分割数
+    # Set grid search parameters
+    observation_data = 'yudamari' 
+    min_window = 30           
+    delta_window = 15    
+    grid_number = 11            
 
-    # グリッド探索の実行
     overlap_train_test(observation_data, min_window, delta_window, grid_number)
 
     #observation_data = 'kakou'

@@ -23,13 +23,9 @@ data_name_dict = {
 start_period = '2010-01-01'
 end_period = '2022-12-31'
 
-min_window = 30              # 最小のウィンドウサイズ
-delta_window = 15             # ウィンドウサイズの増分
+min_window = 30             
+delta_window = 15            
 grid_number = 11
-
-min_window = 1              # 最小のウィンドウサイズ
-delta_window = 1             # ウィンドウサイズの増分
-grid_number = 5
 
 
 '''       
