@@ -52,4 +52,4 @@ python main.py
 - Ensure Docker is installed and running on your system before executing these steps.
 - For GPU support, modify the `Dockerfile` and ensure your environment has the necessary drivers and CUDA toolkit installed.
 - Now, only dummy data is provided in this repository due to the restriction on data redistribution. When running, please replace data/dummy_observation_data.dat with data/observation_data.dat.
-  - We are currently planning to add code to install actual Hi-net data.
+  - We cannot make all data public, but We are currently planning to add code to install actual Hi-net data.
