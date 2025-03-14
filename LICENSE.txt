@@ -22,11 +22,11 @@ SOFTWARE.
 
 ---
 
-### Attribution
+Attribution
 
-This project builds upon the work from **Dempsey et al. (2020)**, whose original code was released under the MIT License.
+This project builds upon the work from Dempsey et al. (2020), whose original code was released under the MIT License.
 
-- **Original Repository:** [https://github.com/ddempsey/whakaari](https://github.com/ddempsey/whakaari)
-- **Modifications & Extensions:** This project includes adaptations and improvements based on the original work.
+- Original Repository: [https://github.com/ddempsey/whakaari]
+- Modifications & Extensions: This project includes adaptations and improvements based on the original work.
 
 We acknowledge and appreciate the original work, and all modifications follow the terms of the MIT License.
