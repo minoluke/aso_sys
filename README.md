@@ -57,6 +57,6 @@ python main.py
 ## License and Attribution
 This project builds upon the work from Dempsey et al. (2020), whose original code was released under the MIT License.
 
-Original Repository: https://github.com/example/dempsey2020
+Original Repository: https://github.com/ddempsey/whakaari
 Modifications & Extensions: We have made adaptations and improvements tailored for our specific use case.
 We acknowledge and appreciate the original work, and all modifications follow the terms of the MIT License.
