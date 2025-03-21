@@ -36,8 +36,8 @@ observation_m = ObservationData()
 start_period = '2010-01-01'
 end_period = '2022-12-31'
 
-overlap = 0.85
-classifier = 'DT'
+overlap = 0.99
+classifier = 'GRU'
 #all_classifiers = ['DT','XGBoost','LightGBM','CatBoost']
 
 def one_train_test(od,lb,lf,cv):
@@ -86,7 +86,7 @@ def overlap_train_test(od, min_window, delta_window, grid_number):
         one_train_test(od, str(lb_val), str(lf_val), str(cv_val))
 
 if __name__ == "__main__":
-    """
+    
     parser = argparse.ArgumentParser(description='Process some integers.')
     
     parser.add_argument('od', type=str, help='The observation data parameter')
@@ -107,6 +107,5 @@ if __name__ == "__main__":
     overlap_train_test(observation_data, min_window, delta_window, grid_number)
 
     #observation_data = 'kakou'
-
-    #overlap_train_test(observation_data, min_window, delta_window, grid_number)
+    """
     

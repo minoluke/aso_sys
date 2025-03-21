@@ -118,8 +118,8 @@ class BaseModel(object):
             self.root = root
         self.rootdir = os.sep.join(getfile(currentframe()).split(os.sep)[:-2])
         self.plotdir = r'{:s}/save/figures/{:s}'.format(self.rootdir, self.root)
-        self.modeldir = r'{:s}/save/rawdata/models/{:s}cv_{:s}'.format(self.rootdir, self.cv, self.root)
-        self.featdir = r'{:s}/save/rawdata/features'.format(self.rootdir, self.root)
+        self.modeldir = r'{:s}/save/rawdata_lstmtest/models/{:s}cv_{:s}'.format(self.rootdir, self.cv, self.root)
+        self.featdir = r'{:s}/save/rawdata_lstmtest/features'.format(self.rootdir, self.root)
         self.featfile = r'{:s}/{:s}_features.csv'.format(self.featdir, self.root)
         self.preddir = r'{:s}/save/rawdata/pred_each/{:s}cv_{:s}'.format(self.rootdir, self.cv, self.root)
         self.consensusdir = r'{:s}/save/rawdata/consensus/'.format(self.rootdir)

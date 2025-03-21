@@ -159,7 +159,7 @@ class TrainModel(FeatureExtractionModel):
             _ = [fp.write('{:d},{:s}\n'.format(freq,ft)) for freq,ft in zip(freqs,labels)]
         return labels, freqs
 
-    def train(self, cv=0, ti=None, tf=None, Nfts=20, Ncl=100, retrain=False, classifier="DT", random_seed=0,
+    def train(self, cv=0, ti=None, tf=None, Nfts=20, Ncl=100, retrain=False, classifier="GRU", random_seed=0,
              n_jobs=6, exclude_dates=[]):
         """ Construct classifier models.
 

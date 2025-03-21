@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 from scipy.stats import mannwhitneyu
 from scipy.ndimage import gaussian_filter, label
-from skimage.measure import regionprops
+#from skimage.measure import regionprops
 from sklearn.metrics import average_precision_score, roc_auc_score
 from sklearn.preprocessing import  MinMaxScaler
 import json
@@ -384,7 +384,7 @@ class PlotModel(FeatureExtractionModel):
 
         times = model_data[next(iter(model_data))]['time']
 
-   
+        """
         for t in times:
             count_above_threshold = 0
             for model in model_data.values():
@@ -400,7 +400,26 @@ class PlotModel(FeatureExtractionModel):
                     alarm_end_time = t + pd.Timedelta(days=duration)
                     is_alarm = True
                 else:
-                    alarm_end_time = max(alarm_end_time, t + pd.Timedelta(days=duration))
+                    alarm_end_time = max(alarm_end_time, t + pd.Timedelta(days=duration))"""
+        for t in times:
+            smoothed_values = []
+            for model in model_data.values():
+                filtered = model[model['time'] == t]
+                if not filtered.empty:
+                    smoothed_values.append(filtered['smoothed'].values[0])
+            
+            if smoothed_values:
+                mean_smoothed = sum(smoothed_values) / len(smoothed_values)
+            else:
+                mean_smoothed = 0
+        
+        if mean_smoothed >= threshold:
+            if not is_alarm:
+                last_alert_time = t
+                alarm_end_time = t + pd.Timedelta(days=duration)
+                is_alarm = True
+            else:
+                alarm_end_time = max(alarm_end_time, t + pd.Timedelta(days=duration))
 
             
             if is_alarm and t > alarm_end_time:

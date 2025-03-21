@@ -18,7 +18,7 @@ class TestModel(FeatureExtractionModel):
             Use classifier models to forecast eruption likelihood.
     """
     
-    def test(self,cv=0, ti=None, tf=None, recalculate=False, n_jobs=6, classifier='DT'):
+    def test(self,cv=0, ti=None, tf=None, recalculate=False, n_jobs=6, classifier='GRU'):
         """ Use classifier models to forecast eruption likelihood.
 
             Parameters:

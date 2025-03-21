@@ -3,12 +3,23 @@ from datetime import datetime
 from pandas._libs.tslibs.timestamps import Timestamp
 from sklearn.tree import DecisionTreeClassifier
 
-import xgboost as xgb
-import lightgbm as lgb
-from catboost import CatBoostClassifier
+#import xgboost as xgb
+#import lightgbm as lgb
+#from catboost import CatBoostClassifier
 
 import re
 import pandas as pd
+
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+import logging
+import warnings
+import tensorflow as tf
+
+tf.get_logger().setLevel(logging.ERROR)
+warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore", category=UserWarning)
 
 def sanitize_feature_names(feature_names):
     def sanitize(name):
@@ -60,6 +71,37 @@ def datetimeify(t):
         except ValueError:
             pass
     raise ValueError("time data '{:s}' not a recognized format".format(t))
+
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Reshape, LSTM, GRU, Dense, Dropout
+
+def create_lstm_model(activation='tanh', units=50, dropout_rate=0.2, feature_dim=20):
+    """
+    LSTMモデルを作成する関数
+    入力が (feature_dim,) の場合にReshapeで (1, feature_dim) に変換する
+    """
+    model = Sequential()
+    model.add(Reshape((1, feature_dim), input_shape=(feature_dim,)))
+    model.add(LSTM(units, activation=activation))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return model
+
+def create_gru_model(activation='tanh', units=50, dropout_rate=0.2, feature_dim=20):
+    """
+    GRUモデルを作成する関数
+    入力が (feature_dim,) の場合にReshapeで (1, feature_dim) に変換する
+    """
+    model = Sequential()
+    model.add(Reshape((1, feature_dim), input_shape=(feature_dim,)))
+    model.add(GRU(units, activation=activation))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return model
+
 
 def get_classifier(classifier):
     """ Return scikit-learn ML classifiers and search grids for input strings.
@@ -158,6 +200,34 @@ def get_classifier(classifier):
             'l2_leaf_reg': [1, 3, 5]
         }
         return model, param_grid
+ 
+
+    elif classifier == "LSTM":        # LSTM
+        from scikeras.wrappers import KerasClassifier
+        model = KerasClassifier(model=create_lstm_model, model__feature_dim=20, verbose=0)
+        grid = {
+            'model__activation': ['tanh', 'relu'],
+            'model__units': [50, 100],
+            'model__dropout_rate': [0.2, 0.5],
+            'epochs': [10, 20],
+            'batch_size': [32, 64]
+        }
+        return model, grid
+
+
+    elif classifier == "GRU":
+        from scikeras.wrappers import KerasClassifier
+        model = KerasClassifier(model=create_gru_model, model__feature_dim=20, verbose=0)
+        grid = {
+            'model__activation': ['tanh', 'relu'],
+            'model__units': [50, 100],
+            'model__dropout_rate': [0.2, 0.5],
+            'epochs': [10, 20],
+            'batch_size': [32, 64]
+        }
+        return model, grid
+
+
     else:
         raise ValueError(f"classifier '{classifier}' not recognised")
     

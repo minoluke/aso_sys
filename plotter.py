@@ -41,14 +41,14 @@ overlap = 0.85
 look_backward = 165
 look_forward = 165
 cv=1
-od='tremor10min'
+od='kakou'
 
-data_streams = data_streams_dict.get(od)
+data_streams = data_streams_dict.get
 
 
 plotmodel = PlotModel(ti=start_period, tf=end_period, look_backward=look_backward, overlap=overlap, look_forward=look_forward, data_streams=data_streams, od=od, cv=cv)
 
-plotmodel.plot_AUC_colormap(min_window, delta_window, grid_number, observation_data_name='tremor 10 min')
+plotmodel.plot_AUC_colormap(min_window, delta_window, grid_number, observation_data_name='crater wall temperature') 
 #plotmodel.plot_learning_curve(max_models=100, metrics='AUC',observation_data_name='tilt')
 '''
 for key, value in data_name_dict.items():
@@ -63,7 +63,7 @@ for key, value in data_name_dict.items():
 
 
 
-#observation_names = ['magnetic', 'tilt', 'gas', 'kakou', 'yudamari', 'tremor']
+observation_names = ['magnetic', 'tilt', 'gas', 'kakou', 'yudamari', 'tremor']
 #plotmodel.plot_optimized_time_scale(observation_names, min_window, delta_window, grid_number, smoothing_sigma=0.5, persentile=90)
 #plotmodel.plot_time_series_with_alarm_all(threshold = 0.65, m_threshold=3)
 
