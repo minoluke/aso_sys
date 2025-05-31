@@ -72,7 +72,7 @@ class BaseModel(object):
         preddir : str
             Directory to save forecast model predictions.
     """
-    def __init__(self, look_backward, overlap, look_forward,data_streams, ti=None, tf=None, root=None, od=None, cv=None):
+    def __init__(self, look_backward, look_forward,data_streams, overlap=0.85, ti=None, tf=None, root=None, od=None, cv=None):
         self.look_backward = look_backward
         self.overlap = overlap
         self.look_forward = look_forward

@@ -1,33 +1,12 @@
 #!/usr/bin/env python3
-import os, sys, argparse, warnings, logging
+import os, sys, itertools, time, json
 from datetime import timedelta
-import numpy as np
-import itertools
-import time
 
 sys.path.insert(0, os.path.abspath('..'))
 from modules import *
 
-# tsfresh and sklearn dump a lot of warnings - these are switched off below, but should be switched back on when debugging
-logger = logging.getLogger("tsfresh")
-logger.setLevel(logging.ERROR)
-
-from sklearn.exceptions import FitFailedWarning
-warnings.filterwarnings("ignore", category=UserWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
-warnings.filterwarnings("ignore", category=FitFailedWarning)
-warnings.filterwarnings("ignore", category=RuntimeWarning)
-np.seterr(divide='ignore', invalid='ignore')
-
-data_streams_dict = {
-        'tremor': ['rsam', 'mf', 'hf', 'dsar'],
-        'gas': ['gas_max', 'gas_min', 'gas_mean', 'gas_number'],
-        'magnetic': ['magnetic'],
-        'kakou': ['kakouwall_temp'],
-        'tilt': ['tilt1_NS', 'tilt1_EW', 'tilt2_NS', 'tilt2_EW'],
-        'yudamari': ['yudamari_number', 'yudamari_temp'],
-        'all': ['rsam', 'mf', 'hf', 'dsar', 'gas_max', 'gas_min', 'gas_mean', 'gas_number','magnetic', 'kakouwall_temp', 'tilt1_NS', 'tilt1_EW', 'tilt2_NS', 'tilt2_EW','yudamari_number', 'yudamari_temp']
-    }
+with open(os.path.join("data", "data_streams.json"), "r", encoding="utf-8") as f:
+    data_streams_dict = json.load(f)
 
 month = timedelta(days=365.25/12)
 n_jobs = 6
@@ -36,7 +15,7 @@ observation_m = ObservationData()
 start_period = '2010-01-01'
 end_period = '2022-12-31'
 
-overlap = 0.85
+overlap = 0.99
 classifier = 'DT'
 #all_classifiers = ['DT','XGBoost','LightGBM','CatBoost']
 

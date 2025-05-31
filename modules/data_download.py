@@ -78,7 +78,7 @@ class HinetDownloader:
 
         if os.path.exists(self.csv_path):
             df_done = pd.read_csv(self.csv_path)
-            done_start_times = set(df_done["start"])
+            done_start_times = set(df_done["time"])
         else:
             done_start_times = set()
 
@@ -158,7 +158,7 @@ class HinetDownloader:
         # ===== Forward fill missing intervals =====
         print("⏳ Applying forward fill...")
         df = pd.read_csv(self.csv_path, parse_dates=["time"])
-        df = df.sort_values("start").reset_index(drop=True)
+        df = df.sort_values("time").reset_index(drop=True)
         df = df.ffill()
         df.to_csv(self.csv_path, index=False)
         print("✅ Forward fill applied to CSV")

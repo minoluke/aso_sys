@@ -1,0 +1,11 @@
+{
+    "tremor": ["rsam", "mf", "hf", "dsar"],
+    "gas": ["gas_max", "gas_min", "gas_mean", "gas_number"],
+    "magnetic": ["magnetic"],
+    "kakou": ["kakouwall_temp"],
+    "tilt": ["tilt1_NS", "tilt1_EW", "tilt2_NS", "tilt2_EW"],
+    "yudamari": ["yudamari_number", "yudamari_temp"],
+    "all": ["rsam", "mf", "hf", "dsar", "gas_max", "gas_min", "gas_mean", "gas_number",
+            "magnetic", "kakouwall_temp", "tilt1_NS", "tilt1_EW", "tilt2_NS", "tilt2_EW",
+            "yudamari_number", "yudamari_temp"]
+}
