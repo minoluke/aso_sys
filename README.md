@@ -53,10 +53,14 @@ python main.py
 - For GPU support, modify the `Dockerfile` and ensure your environment has the necessary drivers and CUDA toolkit installed.
 - Now, only dummy data is provided in this repository due to the restriction on data redistribution. When running, please replace data/dummy_observation_data.dat with data/observation_data.dat.
   - We cannot make all data public, but We are currently planning to add code to install actual Hi-net data.
- 
+
 ## License and Attribution
+
 This project builds upon the work from Dempsey et al. (2020), whose original code was released under the MIT License.
 
 Original Repository: https://github.com/ddempsey/whakaari
 Modifications & Extensions: We have made adaptations and improvements tailored for our specific use case.
 We acknowledge and appreciate the original work, and all modifications follow the terms of the MIT License.
+
+win32tool のパス、
+https://hinetwww11.bosai.go.jp/auth/manual/?LANG=ja

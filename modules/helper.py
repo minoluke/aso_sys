@@ -11,6 +11,19 @@ import re
 import pandas as pd
 
 def sanitize_feature_names(feature_names):
+    """
+    Sanitize feature names by removing spaces and replacing non-alphanumeric characters with underscores.
+
+    Parameters:
+    -----------
+    feature_names : str, list of str, or pd.Index
+        Feature names to be sanitized.
+
+    Returns:
+    --------
+    list of str
+        Sanitized feature names as a list.
+    """
     def sanitize(name):
         name = name.replace(' ', '')
         return re.sub(r'[^a-zA-Z0-9_]', '_', name)
@@ -26,6 +39,14 @@ def sanitize_feature_names(feature_names):
         raise ValueError("Input should be a string, list of strings, or pd.Index.")
 
 def is_gpu_available():
+    """
+    Check if a CUDA-compatible GPU is available on the system.
+
+    Returns:
+    --------
+    bool
+        True if GPU is available, False otherwise.
+    """
     try:
         libcuda = ctypes.CDLL('nvcuda.dll')
         count = ctypes.c_int()

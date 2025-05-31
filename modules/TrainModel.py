@@ -262,6 +262,39 @@ class TrainModel(FeatureExtractionModel):
             shutil.copy(all_fts_path, new_all_fts_path)
  
 def train_one_model(fM, ys, Nfts, modeldir, classifier, retrain, random_seed, random_state):
+    
+    """
+    Train a single classifier model and write selected feature information to file.
+
+    Parameters:
+    -----------
+    fM : pd.DataFrame
+        Feature matrix used for training.
+    ys : pd.Series
+        Label vector corresponding to the feature matrix.
+    Nfts : int
+        Number of top-ranked features to retain for model training.
+    modeldir : str
+        Directory to save the trained model and feature list.
+    classifier : str
+        Type of classifier to use. Options include:
+        "DT" - Decision Tree
+        "XGBoost" - XGBoost
+        "LightGBM" - LightGBM
+        "CatBoost" - CatBoost
+    retrain : bool
+        If True, retrain the model even if a saved version exists.
+    random_seed : int
+        Base seed for random number generation to ensure reproducibility.
+    random_state : int
+        Unique identifier for this model instance, used in naming output files.
+
+    Returns:
+    --------
+    None
+        The function saves the trained model and selected features to disk.
+    """
+
     # undersample data
     rus = RandomUnderSampler(sampling_strategy=0.75, random_state=random_state+random_seed)
     fMt,yst = rus.fit_resample(fM,ys)
