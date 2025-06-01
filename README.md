@@ -46,6 +46,18 @@ This script will:
 - Download 10 minutes of Hi-net waveform data (for testing purposes)
 - Train and test a model using fixed parameters
 
+## Parameters
+
+- observation_data_key: Type of data stream to use (e.g., "tremor")
+
+- look_backward: Number of days to look backward from the reference time (e.g., 60.0)
+
+- look_forward: Number of days to look forward to assign eruption labels (e.g., 30.0)
+
+- cv_index: Index used for cross-validation selection (e.g., 0)
+
+- start_period, end_period: Training and testing time window (e.g., "2015-10-09" to "2016-10-09")
+
 ## Notes
 
 - In `test_run.py`, replace `'your_username'` and `'your_password'` with valid Hi-net credentials.
