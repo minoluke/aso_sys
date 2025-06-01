@@ -1,58 +1,55 @@
 # Setup Instructions
 
-Follow these steps to build and run the Docker container for the project.
+Follow the steps below to build and run the Docker container for this project.
 
 ## 1. Clone the Repository
 
-First, clone the repository:
-
 ```bash
 git clone https://github.com/minoluke/aso_sys
-```
-
-## 2. Navigate to the Project Directory
-
-Change to the project directory:
-
-```bash
 cd aso_sys
 ```
 
-## 3. Build the Docker Image
-
-Build the Docker image using the provided `Dockerfile`:
+## 2. Build the Docker Image
 
 ```bash
 docker build -t aso_sys_image .
 ```
 
-## 4. Run the Docker Container
-
-Run the container with the built image:
+## 3. Run the Docker Container
 
 ```bash
 docker run -it --rm -v $(pwd)/data:/workspace/data aso_sys_image
 ```
 
-This command mounts the local `data` directory to the container's `/workspace/data` directory.
+This command mounts your local `data/` directory to `/workspace/data` inside the container.
 
-## 5. Execute the Main Script
+## 4. Run the Main Script
 
-Inside the container, execute the main program:
+Once inside the container:
 
 ```bash
 python main.py
 ```
 
+---
+
+# Quick Start
+
+To quickly test the system with minimal setup, run:
+
+```bash
+python test_run.py
+```
+
+This script will:
+
+- Download 10 minutes of Hi-net waveform data (for testing purposes)
+- Train and test a model using fixed parameters
+
 ## Notes
 
-- The `Dockerfile` installs all necessary dependencies, including:
-  - Python 3.12
-  - Libraries like tsfresh, scikit-learn, and lightgbm
-- Ensure Docker is installed and running on your system before executing these steps.
-- For GPU support, modify the `Dockerfile` and ensure your environment has the necessary drivers and CUDA toolkit installed.
-- Now, only dummy data is provided in this repository due to the restriction on data redistribution. When running, please replace data/dummy_observation_data.dat with data/observation_data.dat.
-  - We cannot make all data public, but We are currently planning to add code to install actual Hi-net data.
+- In `test_run.py`, replace `'your_username'` and `'your_password'` with valid Hi-net credentials.
+- Hi-net Win32tool setup: [https://hinetwww11.bosai.go.jp/auth/manual/?LANG=en](https://hinetwww11.bosai.go.jp/auth/manual/?LANG=en)
 
 ## License and Attribution
 
@@ -61,6 +58,3 @@ This project builds upon the work from Dempsey et al. (2020), whose original cod
 Original Repository: https://github.com/ddempsey/whakaari
 Modifications & Extensions: We have made adaptations and improvements tailored for our specific use case.
 We acknowledge and appreciate the original work, and all modifications follow the terms of the MIT License.
-
-win32tool のパス、
-https://hinetwww11.bosai.go.jp/auth/manual/?LANG=ja

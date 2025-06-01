@@ -19,8 +19,8 @@ observation_data_key = "tremor"
 look_backward = 60.0  # days
 look_forward = 30.0   # days
 cv_index = 0
-start_period = "2010-01-01"
-end_period = "2022-12-31"
+start_period = "2015-10-09"
+end_period = "2016-10-09"
 
 # Load data stream definitions from JSON
 with open(os.path.join("data", "data_streams.json"), "r", encoding="utf-8") as f:
@@ -48,8 +48,8 @@ def quick_download():
         csv_filename="observation_data.dat"
     )
 
-    start = datetime(2020, 1, 1, 12, 0)
-    end = datetime(2020, 1, 1, 12, 10)
+    start = datetime(2015, 10, 9, 0, 0)
+    end = datetime(2016, 10, 9, 0, 0)
 
     downloader.download_and_process(start, end)
 
