@@ -94,6 +94,39 @@ This structure promotes modularity, ease of testing, and reproducibility.
 - In `test_run.py`, replace `'your_username'` and `'your_password'` with valid Hi-net credentials.
 - Hi-net Win32tool setup: [https://hinetwww11.bosai.go.jp/auth/manual/?LANG=en](https://hinetwww11.bosai.go.jp/auth/manual/?LANG=en)
 
+# Update Log
+
+This document summarizes key updates and planned improvements to the project.
+
+---
+
+## Updates
+
+- Restructured and updated `README.md`
+- Added quick start guide
+- Added explanation of key script arguments
+- Added directory structure documentation
+- Attached docstrings to each major function to clarify usage
+
+---
+
+## Planned Improvements
+
+- **ROC Curve Integration** (High priority):
+
+  - Implement performance visualization for classification results
+
+- **Resource Optimization**:
+
+  - Integrate `tqdm` for progress monitoring
+  - Use `psutil` for logging CPU/memory usage
+
+- **Unit Tests**:
+
+  - Add standalone tests for key modules (e.g., `FeatureExtractionModel`, `TrainModel`)
+
+---
+
 ## License and Attribution
 
 This project builds upon the work from Dempsey et al. (2020), whose original code was released under the MIT License.
