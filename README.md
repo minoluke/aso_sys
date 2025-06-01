@@ -23,17 +23,7 @@ docker run -it --rm -v $(pwd)/data:/workspace/data aso_sys_image
 
 This command mounts your local `data/` directory to `/workspace/data` inside the container.
 
-## 4. Run the Main Script
-
-Once inside the container:
-
-```bash
-python main.py
-```
-
----
-
-# Quick Start
+## 4. Quick Start
 
 To quickly test the system with minimal setup, run:
 
@@ -57,6 +47,47 @@ This script will:
 - cv_index: Index used for cross-validation selection (e.g., 0)
 
 - start_period, end_period: Training and testing time window (e.g., "2015-10-09" to "2016-10-09")
+
+# Project Directory Structure
+
+This project is organized as follows:
+
+```
+aso_sys/
+├── data/                         # Contains input and output data
+│
+├── modules/                     # Source code modules
+│   ├── __init__.py
+│   ├── BaseModel.py             # Base class for model definitions
+│   ├── data_download.py         # Handles Hi-net data download and conversion
+│   ├── FeatureExtractionModel.py# Defines feature calculation logic
+│   ├── helper.py                # Utility functions
+│   ├── ObservationData.py       # Data loader and interface
+│   ├── PlotModel.py             # Plotting logic
+│   ├── TestModel.py             # Testing pipeline
+│   └── TrainModel.py            # Training pipeline
+│
+├── save/                        # Output directory for trained models and results (auto-created)
+│
+├── .dockerignore
+├── .gitignore
+├── dockerfile                   # Dockerfile for building the project environment
+├── environment.yml              # Conda environment specification (alternative to Docker)
+├── LICENSE.txt
+├── main.py                      # Main entry point for running the system
+├── plotter.py                   # Utility for visualizing outputs
+├── README.md
+└── test_run.py                  # Lightweight script for quick start and testing
+```
+
+## Notes
+
+- All custom logic is encapsulated under the `modules/` folder.
+- The `test_run.py` script provides a minimal test pipeline with hardcoded parameters.
+- The `main.py` script provides full configuration and model training/testing logic.
+- The `data/` directory is shared between host and container during Docker execution.
+
+This structure promotes modularity, ease of testing, and reproducibility.
 
 ## Notes
 
