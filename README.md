@@ -98,8 +98,6 @@ This structure promotes modularity, ease of testing, and reproducibility.
 
 This document summarizes key updates and planned improvements to the project.
 
----
-
 ## Updates
 
 - Restructured and updated `README.md`
@@ -107,8 +105,6 @@ This document summarizes key updates and planned improvements to the project.
 - Added explanation of key script arguments
 - Added directory structure documentation
 - Attached docstrings to each major function to clarify usage
-
----
 
 ## Planned Improvements
 
