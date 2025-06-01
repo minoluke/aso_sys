@@ -36,6 +36,16 @@ This script will:
 - Download 10 minutes of Hi-net waveform data (for testing purposes)
 - Train and test a model using fixed parameters
 
+Before running, edit test_run.py:
+
+- Register for a Hi-net account at the official site:
+  https://hinetwww11.bosai.go.jp/auth/?LANG=en
+  (Free registration is required to access the data.)
+- Edit test_run.py and replace 'your_username' and 'your_password' with your Hi-net credentials.
+
+- Ensure that Win32tools are set up. Installation guide available at:
+  https://hinetwww11.bosai.go.jp/auth/manual/?LANG=en
+
 ## Parameters
 
 - observation_data_key: Type of data stream to use (e.g., "tremor")
@@ -79,15 +89,6 @@ aso_sys/
 ├── README.md
 └── test_run.py                  # Lightweight script for quick start and testing
 ```
-
-## Notes
-
-- All custom logic is encapsulated under the `modules/` folder.
-- The `test_run.py` script provides a minimal test pipeline with hardcoded parameters.
-- The `main.py` script provides full configuration and model training/testing logic.
-- The `data/` directory is shared between host and container during Docker execution.
-
-This structure promotes modularity, ease of testing, and reproducibility.
 
 ## Notes
 
